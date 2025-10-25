@@ -1,13 +1,10 @@
 # Программирование Python
 
-# Лабораторная работа №2
+# Лабораторная работа №3
 
 ## Костенков Данил Денисович
 
 ## Группа P4150
-
-
-
 
 
 # Генератор бинарного дерева
@@ -27,19 +24,12 @@
 - Python 3.6+
 - Стандартные библиотеки (collections, unittest)
 
-## Установка
-
-```bash
-git clone <repository-url>
-cd binary-tree-generator
-```
-
 ## Использование
 
 ### Основная функция (словарь)
 
 ```python
-from binary_tree import gen_bin_tree
+from main import gen_bin_tree
 
 # С параметрами по умолчанию (height=5, root=6)
 tree = gen_bin_tree()
@@ -51,7 +41,7 @@ tree = gen_bin_tree(height=3, root=10)
 ### Альтернативные представления
 
 ```python
-from binary_tree import gen_bin_tree_list, gen_bin_tree_namedtuple
+from main import gen_bin_tree_list, gen_bin_tree_namedtuple
 
 # Представление в виде списка
 tree_list = gen_bin_tree_list(height=3, root=6)
@@ -168,17 +158,12 @@ named_tree = gen_bin_tree_namedtuple(2, 6)
 
 ## Тестирование
 
-Для запуска тестов выполните:
+Для запуска тестов запустите:
 
 ```bash
-python -m unittest binary_tree.py
+python test_main.py
 ```
 
-или
-
-```bash
-python binary_tree.py
-```
 
 ### Тестовые случаи
 
@@ -203,3 +188,4 @@ python binary_tree.py
 - Максимальная высота ограничена максимальной глубиной рекурсии Python
 - Для очень больших деревьев рекомендуется использовать итеративный подход
 - Namedtuple создает новый тип для каждого вызова (можно оптимизировать)
+
