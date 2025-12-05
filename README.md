@@ -17,4 +17,7 @@ This repository contains  labworks of the "Python programming" ITMO university's
 * [Лабораторная работа 4](labwork_4)
 * [Лабораторная работа 5](labwork_5)
 * [Лабораторная работа 6](labwork_6)
+* [Лабораторная работа 7](labwork_7)
+* [Лабораторная работа 8](labwork_8)
+* [Лабораторная работа 9](labwork_9)
 
