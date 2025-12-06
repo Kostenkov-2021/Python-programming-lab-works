@@ -1,0 +1,277 @@
+{% extends "base.html" %}
+
+{% block title %}Пользователи - Currency Tracker{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Управление пользователями</h1>
+    <div class="page-actions">
+        <button class="btn btn-primary" onclick="showAddUserModal()">
+            <i class="fas fa-user-plus"></i>
+            Добавить пользователя
+        </button>
+        <button class="btn btn-secondary" onclick="refreshPage()">
+            <i class="fas fa-redo"></i>
+            Обновить
+        </button>
+    </div>
+</div>
+
+<div class="users-grid">
+    {% for user in users %}
+    <div class="user-card">
+        <div class="user-header">
+            <div class="user-avatar">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="user-info">
+                <h3 class="user-name">{{ user.name }}</h3>
+                <p class="user-id">ID: {{ user.id }}</p>
+            </div>
+        </div>
+        
+        <div class="user-stats">
+            <div class="stat">
+                <span class="stat-label">Подписок:</span>
+                <span class="stat-value">{{ user.subscriptions|length }}</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Дата регистрации:</span>
+                <span class="stat-value">Сегодня</span>
+            </div>
+        </div>
+        
+        <div class="user-subscriptions">
+            <h4>Подписки:</h4>
+            {% if user.subscriptions %}
+                <ul class="subscription-list">
+                    {% for sub in user.subscriptions %}
+                    <li class="subscription-item">
+                        <span class="currency-code">{{ sub.currency_id }}</span>
+                        <button class="btn btn-sm btn-danger" 
+                                onclick="unsubscribe({{ user.id }}, '{{ sub.currency_id }}')">
+                            Отписаться
+                        </button>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="no-subscriptions">Нет подписок</p>
+            {% endif %}
+        </div>
+        
+        <div class="user-actions">
+            <a href="/user?id={{ user.id }}" class="btn btn-primary">
+                <i class="fas fa-eye"></i>
+                Просмотреть
+            </a>
+            <button class="btn btn-warning" onclick="editUser({{ user.id }}, '{{ user.name }}')">
+                <i class="fas fa-edit"></i>
+                Редактировать
+            </button>
+            <button class="btn btn-danger" onclick="deleteUser({{ user.id }})">
+                <i class="fas fa-trash"></i>
+                Удалить
+            </button>
+        </div>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-users fa-4x"></i>
+        <h3>Пользователи не найдены</h3>
+        <p>Добавьте первого пользователя, нажав кнопку "Добавить пользователя"</p>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Модальное окно добавления пользователя -->
+<div id="addUserModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Добавить нового пользователя</h3>
+            <button class="close-btn" onclick="closeAddUserModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="addUserForm" onsubmit="return addUser(event)">
+                <div class="form-group">
+                    <label for="userName">Имя пользователя:</label>
+                    <input type="text" id="userName" required 
+                           placeholder="Введите имя пользователя" class="form-control">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Добавить</button>
+                    <button type="button" class="btn btn-secondary" 
+                            onclick="closeAddUserModal()">Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно редактирования пользователя -->
+<div id="editUserModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Редактировать пользователя</h3>
+            <button class="close-btn" onclick="closeEditUserModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="editUserForm" onsubmit="return updateUser(event)">
+                <input type="hidden" id="editUserId">
+                <div class="form-group">
+                    <label for="editUserName">Имя пользователя:</label>
+                    <input type="text" id="editUserName" required 
+                           placeholder="Введите имя пользователя" class="form-control">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <button type="button" class="btn btn-secondary" 
+                            onclick="closeEditUserModal()">Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function showAddUserModal() {
+    document.getElementById('addUserModal').style.display = 'flex';
+}
+
+function closeAddUserModal() {
+    document.getElementById('addUserModal').style.display = 'none';
+}
+
+function showEditUserModal() {
+    document.getElementById('editUserModal').style.display = 'flex';
+}
+
+function closeEditUserModal() {
+    document.getElementById('editUserModal').style.display = 'none';
+}
+
+function editUser(userId, userName) {
+    document.getElementById('editUserId').value = userId;
+    document.getElementById('editUserName').value = userName;
+    showEditUserModal();
+}
+
+function addUser(event) {
+    event.preventDefault();
+    const userName = document.getElementById('userName').value;
+    
+    fetch('/api/users', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name: userName })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Пользователь успешно добавлен');
+            closeAddUserModal();
+            location.reload();
+        } else {
+            alert('Ошибка: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Произошла ошибка при добавлении пользователя');
+    });
+}
+
+function updateUser(event) {
+    event.preventDefault();
+    const userId = document.getElementById('editUserId').value;
+    const userName = document.getElementById('editUserName').value;
+    
+    fetch(`/api/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name: userName })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Пользователь успешно обновлен');
+            closeEditUserModal();
+            location.reload();
+        } else {
+            alert('Ошибка: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Произошла ошибка при обновлении пользователя');
+    });
+}
+
+function deleteUser(userId) {
+    if (confirm('Вы уверены, что хотите удалить этого пользователя?')) {
+        fetch(`/api/users/${userId}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Пользователь успешно удален');
+                location.reload();
+            } else {
+                alert('Ошибка: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Произошла ошибка при удалении пользователя');
+        });
+    }
+}
+
+function unsubscribe(userId, currencyId) {
+    fetch(`/api/users/${userId}/unsubscribe`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ currency_id: currencyId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Подписка успешно удалена');
+            location.reload();
+        } else {
+            alert('Ошибка: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Произошла ошибка при отписке');
+    });
+}
+
+function refreshPage() {
+    location.reload();
+}
+
+// Закрытие модального окна при клике вне его
+window.onclick = function(event) {
+    const addModal = document.getElementById('addUserModal');
+    const editModal = document.getElementById('editUserModal');
+    
+    if (event.target == addModal) {
+        closeAddUserModal();
+    }
+    if (event.target == editModal) {
+        closeEditUserModal();
+    }
+}
+</script>
+{% endblock %}
