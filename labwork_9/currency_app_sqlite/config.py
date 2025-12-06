@@ -22,8 +22,8 @@ class Config:
     DEBUG = True
     
     # Настройки автора
-    AUTHOR_NAME = "Иван Иванов"
-    AUTHOR_GROUP = "ПИ-202"
+    AUTHOR_NAME = "Данил Костенков"
+    AUTHOR_GROUP = "P-4150"
     
     # Настройки API курсов валют
     CURRENCY_API_URL = "https://www.cbr-xml-daily.ru/daily_json.js"
