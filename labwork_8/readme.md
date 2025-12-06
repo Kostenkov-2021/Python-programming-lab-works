@@ -1,6 +1,6 @@
 # Программирование Python
 
-# Лабораторная работа №8 и 9
+# Лабораторная работа №8
 
 ## Костенков Данил Денисович
 
@@ -549,7 +549,7 @@ ID: R01239
 
 ### 4. Страница конкретного пользователя (/user?id=1)
 
-**Пример вывода с графиком:**
+**Пример вывода:**
 ```html
 <div class="user-profile">
     <h2>Профиль пользователя: Иван Иванов</h2>
@@ -570,110 +570,6 @@ ID: R01239
 </div>
 ```
 
-## Дополнительный функционал
-
-### 1. Графики динамики курсов
-
-Для визуализации динамики курсов валют используется библиотека Chart.js. Реализован генератор тестовых данных:
-
-```python
-def generate_chart_data(self, currencies: List[Currency]) -> dict:
-    """
-    Генерация данных для графика динамики курсов.
-    
-    Args:
-        currencies: Список валют для отображения
-    
-    Returns:
-        Словарь с данными для графика в формате Chart.js
-    """
-    # В реальном приложении здесь был бы запрос к API исторических данных
-    # Для демонстрации генерируем тестовые данные
-    
-    chart_data = {
-        'labels': [],  # Даты
-        'datasets': []  # Данные по каждой валюте
-    }
-    
-    # Генерация дат за последние 3 месяца
-    today = datetime.now()
-    dates = []
-    for i in range(90, -1, -7):  # Раз в неделю
-        date = today - timedelta(days=i)
-        dates.append(date.strftime('%d.%m'))
-    
-    chart_data['labels'] = dates
-    
-    # Генерация данных для каждой валюты
-    colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
-    
-    for idx, currency in enumerate(currencies):
-        # Создаем базовый тренд с небольшими случайными колебаниями
-        base_value = currency.value
-        values = []
-        
-        for i in range(len(dates)):
-            # Симулируем изменение курса
-            trend = math.sin(i / 10) * 5  # Долгосрочный тренд
-            noise = random.uniform(-2, 2)  # Случайные колебания
-            value = base_value + trend + noise
-            values.append(round(value, 2))
-        
-        dataset = {
-            'label': f'{currency.char_code} - {currency.name}',
-            'data': values,
-            'borderColor': colors[idx % len(colors)],
-            'backgroundColor': colors[idx % len(colors)] + '20',  # Прозрачность
-            'borderWidth': 2,
-            'fill': True,
-            'tension': 0.4  # Сглаживание линии
-        }
-        
-        chart_data['datasets'].append(dataset)
-    
-    return chart_data
-```
-
-### 2. JavaScript для отображения графика
-
-```javascript
-function renderCurrencyChart(chartData) {
-    const ctx = document.getElementById('currencyChart').getContext('2d');
-    
-    new Chart(ctx, {
-        type: 'line',
-        data: chartData,
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Динамика курсов валют за 3 месяца'
-                },
-                tooltip: {
-                    mode: 'index',
-                    intersect: false
-                }
-            },
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Дата'
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Курс (RUB)'
-                    },
-                    beginAtZero: false
-                }
-            }
-        }
-    });
-}
-```
 
 ## Тестирование
 

@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Главная - Currency Tracker{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">Добро пожаловать в Currency Tracker</h1>
+        <p class="hero-subtitle">
+            Отслеживайте курсы валют в реальном времени, 
+            подписывайтесь на интересующие вас валюты и 
+            анализируйте их динамику
+        </p>
+        <div class="hero-actions">
+            <a href="/currencies" class="btn btn-primary btn-lg">
+                <i class="fas fa-coins"></i>
+                Смотреть курсы валют
+            </a>
+            <a href="/users" class="btn btn-secondary btn-lg">
+                <i class="fas fa-users"></i>
+                Управление пользователями
+            </a>
+        </div>
+    </div>
+    <div class="hero-image">
+        <i class="fas fa-chart-line fa-10x"></i>
+    </div>
+</div>
+
+<div class="features-section">
+    <h2 class="section-title">Возможности приложения</h2>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-sync-alt"></i>
+            </div>
+            <h3 class="feature-title">Актуальные курсы</h3>
+            <p class="feature-description">
+                Получайте курсы валют в реальном времени 
+                от Центрального Банка РФ
+            </p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-bell"></i>
+            </div>
+            <h3 class="feature-title">Подписки</h3>
+            <p class="feature-description">
+                Подписывайтесь на интересующие вас валюты 
+                и отслеживайте их динамику
+            </p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-chart-bar"></i>
+            </div>
+            <h3 class="feature-title">Аналитика</h3>
+            <p class="feature-description">
+                Анализируйте изменения курсов валют 
+                с помощью интерактивных графиков
+            </p>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <h3 class="feature-title">Управление</h3>
+            <p class="feature-description">
+                Управляйте пользователями и их подписками 
+                через удобный веб-интерфейс
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="stats-section">
+    <h2 class="section-title">Статистика системы</h2>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-value">{{ users_count }}</div>
+            <div class="stat-label">Пользователей</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-value">{{ currencies_count }}</div>
+            <div class="stat-label">Валют</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-value">{{ subscriptions_count }}</div>
+            <div class="stat-label">Подписок</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-value">{{ last_update }}</div>
+            <div class="stat-label">Последнее обновление</div>
+        </div>
+    </div>
+</div>
+
+<div class="quick-actions">
+    <h2 class="section-title">Быстрые действия</h2>
+    <div class="actions-grid">
+        <a href="/currencies?refresh=true" class="action-card">
+            <i class="fas fa-redo"></i>
+            <span>Обновить курсы</span>
+        </a>
+        
+        <a href="/users" class="action-card">
+            <i class="fas fa-user-plus"></i>
+            <span>Добавить пользователя</span>
+        </a>
+        
+        <a href="/currencies" class="action-card">
+            <i class="fas fa-search"></i>
+            <span>Поиск валюты</span>
+        </a>
+        
+        <a href="/author" class="action-card">
+            <i class="fas fa-info-circle"></i>
+            <span>Информация об авторе</span>
+        </a>
+    </div>
+</div>
+{% endblock %}
